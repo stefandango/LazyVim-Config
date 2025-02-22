@@ -4,3 +4,32 @@
 --
 
 -- vim.g.mapleader = " "
+
+vim.opt.tabstop = 4
+vim.softtabstop = 4
+vim.opt.shiftwidth = 4
+vim.opt.expandtab = true
+
+vim.opt.smartindent = true
+
+vim.opt.wrap = false
+
+vim.opt.undofile = true
+
+-- Set highlight on search
+vim.opt.hlsearch = false
+vim.opt.incsearch = true
+
+-- Enable mouse mode
+vim.opt.mouse = "a"
+
+-- Case insensitive searching UNLESS /C or capital in search
+vim.opt.ignorecase = true
+vim.opt.smartcase = true
+
+vim.opt.scrolloff = 8
+vim.opt.signcolumn = "yes"
+vim.opt.isfname:append("@-@")
+
+vim.opt.colorcolumn = "120"
+vim.opt.cmdheight = 0
