@@ -30,5 +30,19 @@ return {
         -- },
       },
     },
+    explorer = {},
+    picker = {
+      sources = {
+        files = {
+          hidden = true,
+          follow = true,
+        },
+      },
+      formatters = {
+        file = {
+          filename_first = true,
+        },
+      },
+    },
   },
 }
