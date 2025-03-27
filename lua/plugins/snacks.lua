@@ -38,11 +38,44 @@ return {
           follow = true,
         },
       },
-      formatters = {
-        file = {
-          filename_first = true,
+      win = {
+        input = {
+          keys = {
+            ["A"] = { "easy", mode = { "n" } },
+            ["<a-.>"] = { "toggle_hidden", mode = { "i", "n" } },
+          },
         },
       },
+      actions = {
+        easy = function(state)
+          print(state)
+          local node = state.tree:get_node()
+          local path = node.type == "directory" and node.path or vim.fs.dirname(node.path)
+          require("easy-dotnet").create_new_item(path, function()
+            require("neo-tree.sources.manager").refresh(state.name)
+          end)
+        end,
+      },
+    },
+    formatters = {
+      file = {
+        filename_first = true,
+      },
+    },
+  },
+  keys = {
+    {
+      "<leader>e",
+      function()
+        Snacks.picker.explorer({
+          cwd = vim.fn.expand("%:p:h"),
+          auto_close = true,
+          layout = {
+            preset = "vertical",
+          },
+        })
+      end,
+      desc = "Explorer",
     },
   },
 }
