@@ -55,6 +55,17 @@ return {
           layout = {
             preset = "vertical",
           },
+          win = {
+            list = {
+              keys = {
+                ["-"] = "explorer_up",
+                ["A"] = function()
+                  local path = Snacks.picker.get()[1]:dir()
+                  require("easy-dotnet").create_new_item(path)
+                end,
+              },
+            },
+          },
         })
       end,
       desc = "Explorer",
