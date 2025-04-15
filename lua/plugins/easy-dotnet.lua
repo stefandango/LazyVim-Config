@@ -32,6 +32,7 @@ return {
 
           local current_buf = vim.api.nvim_get_current_buf()
           vim.api.nvim_buf_set_keymap(current_buf, "n", "<C-q>", ":close<CR>", { noremap = true, silent = true })
+          vim.api.nvim_buf_set_keymap(current_buf, "t", "<C-c>", "<C-c>", { noremap = true, silent = true })
         end,
       },
 
