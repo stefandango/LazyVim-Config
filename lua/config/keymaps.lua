@@ -35,3 +35,23 @@ keymap.set("n", "Q", "<nop>", { desc = "[OVERWRITE] Dont use..." })
 
 -- Command to make current file executable..
 keymap.set("n", "<leader>x", "<cmd>!chmod +x %<CR>", { desc = "set chmod+x for current file..", silent = true })
+
+-- C# specific keymaps
+keymap.set("n", "<leader>ds", function()
+  local project_path = vim.fn.expand("%:p:h")
+  vim.cmd("!dotnet sln add " .. project_path)
+end, { desc = "Add project to solution" })
+
+keymap.set("n", "<leader>dp", function()
+  local template = vim.fn.input("Template (console/classlib/web/etc): ")
+  if template ~= "" then
+    local name = vim.fn.input("Project name: ")
+    if name ~= "" then
+      vim.cmd("!dotnet new " .. template .. " -n " .. name)
+    end
+  end
+end, { desc = "Create new dotnet project" })
+
+keymap.set("n", "<leader>dr", "<cmd>!dotnet restore<CR>", { desc = "Dotnet restore" })
+keymap.set("n", "<leader>db", "<cmd>!dotnet build<CR>", { desc = "Dotnet build" })
+keymap.set("n", "<leader>dt", "<cmd>!dotnet test<CR>", { desc = "Dotnet test" })
