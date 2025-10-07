@@ -1,5 +1,5 @@
 return {
-  "snacks.nvim",
+  "folke/snacks.nvim",
   opts = {
     dashboard = {
       preset = {
@@ -36,6 +36,10 @@ return {
         files = {
           hidden = true,
           follow = true,
+        },
+        explorer = {
+          hidden = true,
+          ignored = true,
         },
       },
     },

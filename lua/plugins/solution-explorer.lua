@@ -4,10 +4,10 @@ return {
     opts = function(_, opts)
       opts.filesystem = opts.filesystem or {}
       opts.filesystem.filtered_items = {
-        visible = false,
+        visible = true,
         hide_dotfiles = false,
         hide_gitignored = true,
-        hide_hidden = true,
+        hide_hidden = false,
         hide_by_name = {
           "bin",
           "obj", 

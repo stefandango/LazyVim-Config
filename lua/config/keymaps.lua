@@ -55,3 +55,10 @@ end, { desc = "Create new dotnet project" })
 keymap.set("n", "<leader>dr", "<cmd>!dotnet restore<CR>", { desc = "Dotnet restore" })
 keymap.set("n", "<leader>db", "<cmd>!dotnet build<CR>", { desc = "Dotnet build" })
 keymap.set("n", "<leader>dt", "<cmd>!dotnet test<CR>", { desc = "Dotnet test" })
+
+-- Enhanced keymap groups for Which-Key
+keymap.set("n", "<leader>d", "", { desc = "Dotnet/Debug" })
+keymap.set("n", "<leader>dn", "", { desc = "Dotnet New" })
+keymap.set("n", "<leader>dc", "", { desc = "Dotnet Code" })
+keymap.set("n", "<leader>g", "", { desc = "Go" })
+keymap.set("n", "<leader>gs", "", { desc = "Go Generate" })
