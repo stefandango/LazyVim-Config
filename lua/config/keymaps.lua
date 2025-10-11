@@ -56,6 +56,13 @@ keymap.set("n", "<leader>dr", "<cmd>!dotnet restore<CR>", { desc = "Dotnet resto
 keymap.set("n", "<leader>db", "<cmd>!dotnet build<CR>", { desc = "Dotnet build" })
 keymap.set("n", "<leader>dt", "<cmd>!dotnet test<CR>", { desc = "Dotnet test" })
 
+-- Copy file path for Claude Code
+keymap.set("n", "<leader>yp", function()
+    local path = vim.fn.expand("%:p")
+    vim.fn.setreg("+", path)
+    vim.notify("Copied: " .. path, vim.log.levels.INFO)
+end, { desc = "Yank absolute file path" })
+
 -- Enhanced keymap groups for Which-Key
 keymap.set("n", "<leader>d", "", { desc = "Dotnet/Debug" })
 keymap.set("n", "<leader>dn", "", { desc = "Dotnet New" })
