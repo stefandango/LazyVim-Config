@@ -1,0 +1,2 @@
+WRN 2025-10-11T21:52:26.113 ?.66296    server_start:193: Failed to start server: operation not permitted: /var/folders/ms/xff0nm3d2y5gm122mfxct30h0000gn/T/nvim.stefan/F8eLxB/nvim.66296.0
+WRN 2025-10-11T21:52:32.667 ?.66304    server_start:193: Failed to start server: operation not permitted: /var/folders/ms/xff0nm3d2y5gm122mfxct30h0000gn/T/nvim.stefan/FWiz71/nvim.66304.0

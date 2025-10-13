@@ -6,7 +6,7 @@
 -- vim.g.mapleader = " "
 
 vim.opt.tabstop = 4
-vim.softtabstop = 4
+vim.opt.softtabstop = 4
 vim.opt.shiftwidth = 4
 vim.opt.expandtab = true
 
@@ -33,3 +33,12 @@ vim.opt.isfname:append("@-@")
 
 vim.opt.colorcolumn = "120"
 vim.opt.cmdheight = 0
+
+-- prune legacy dein.vim paths that can confuse tooling like Supermaven
+local legacy_dein = vim.fn.expand("~/.cache/nvim/dein.vim")
+if vim.fn.isdirectory(legacy_dein) == 0 then
+  pcall(function()
+    vim.opt.runtimepath:remove(legacy_dein)
+    vim.opt.packpath:remove(legacy_dein)
+  end)
+end
