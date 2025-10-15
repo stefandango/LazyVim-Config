@@ -1,5 +1,5 @@
 return {
-  "snacks.nvim",
+  "folke/snacks.nvim",
   opts = {
     dashboard = {
       preset = {
@@ -37,6 +37,10 @@ return {
           hidden = true,
           follow = true,
         },
+        explorer = {
+          hidden = true,
+          ignored = true,
+        },
       },
     },
     formatters = {
@@ -60,8 +64,18 @@ return {
               keys = {
                 ["-"] = "explorer_up",
                 ["A"] = function()
-                  local path = Snacks.picker.get()[1]:dir()
-                  require("easy-dotnet").create_new_item(path)
+                  local picker = Snacks.picker.get()
+                  local path = picker[1]:dir()
+                  require("easy-dotnet").create_new_item(path, function()
+                    -- Find the most recently created file in the directory
+                    local files = vim.fn.glob(path .. "/*.cs", false, true)
+                    if #files > 0 then
+                      table.sort(files, function(a, b)
+                        return vim.fn.getftime(a) > vim.fn.getftime(b)
+                      end)
+                      vim.cmd("edit " .. files[1])
+                    end
+                  end)
                 end,
               },
             },

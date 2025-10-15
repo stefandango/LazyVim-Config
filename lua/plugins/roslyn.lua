@@ -13,6 +13,16 @@ return {
         end,
       },
     },
+    keys = {
+      { "<leader>cr", function() vim.lsp.buf.rename() end, desc = "Rename Symbol", ft = "cs" },
+      { "<leader>ca", function() vim.lsp.buf.code_action() end, desc = "Code Actions", ft = "cs" },
+      { "<leader>cf", function() vim.lsp.buf.format() end, desc = "Format Document", ft = "cs" },
+      { "gI", function() vim.lsp.buf.implementation() end, desc = "Go to Implementation", ft = "cs" },
+      { "gr", function() vim.lsp.buf.references() end, desc = "Find References", ft = "cs" },
+      { "K", function() vim.lsp.buf.hover() end, desc = "Hover Documentation", ft = "cs" },
+      { "<leader>ch", function() vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled()) end, desc = "Toggle Inlay Hints", ft = "cs" },
+      { "<leader>cs", function() vim.lsp.buf.signature_help() end, desc = "Signature Help", ft = "cs" },
+    },
     config = function()
       require("roslyn").setup({
         args = {
@@ -38,9 +48,8 @@ return {
           ),
         },
         ---@diagnostic disable-next-line: missing-fields
-        config = {
-          handlers = require("rzls.roslyn_handlers"),
-          settings = {
+        handlers = require("rzls.roslyn_handlers"),
+        settings = {
             ["csharp|inlay_hints"] = {
               csharp_enable_inlay_hints_for_implicit_object_creation = true,
               csharp_enable_inlay_hints_for_implicit_variable_types = true,
@@ -60,7 +69,6 @@ return {
               dotnet_enable_references_code_lens = true,
             },
           },
-        },
       })
     end,
     init = function()

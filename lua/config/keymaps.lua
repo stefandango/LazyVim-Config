@@ -35,3 +35,37 @@ keymap.set("n", "Q", "<nop>", { desc = "[OVERWRITE] Dont use..." })
 
 -- Command to make current file executable..
 keymap.set("n", "<leader>x", "<cmd>!chmod +x %<CR>", { desc = "set chmod+x for current file..", silent = true })
+
+-- C# specific keymaps
+keymap.set("n", "<leader>ds", function()
+  local project_path = vim.fn.expand("%:p:h")
+  vim.cmd("!dotnet sln add " .. project_path)
+end, { desc = "Add project to solution" })
+
+keymap.set("n", "<leader>dp", function()
+  local template = vim.fn.input("Template (console/classlib/web/etc): ")
+  if template ~= "" then
+    local name = vim.fn.input("Project name: ")
+    if name ~= "" then
+      vim.cmd("!dotnet new " .. template .. " -n " .. name)
+    end
+  end
+end, { desc = "Create new dotnet project" })
+
+keymap.set("n", "<leader>dr", "<cmd>!dotnet restore<CR>", { desc = "Dotnet restore" })
+keymap.set("n", "<leader>db", "<cmd>!dotnet build<CR>", { desc = "Dotnet build" })
+keymap.set("n", "<leader>dt", "<cmd>!dotnet test<CR>", { desc = "Dotnet test" })
+
+-- Copy file path for Claude Code
+keymap.set("n", "<leader>yp", function()
+    local path = vim.fn.expand("%:p")
+    vim.fn.setreg("+", path)
+    vim.notify("Copied: " .. path, vim.log.levels.INFO)
+end, { desc = "Yank absolute file path" })
+
+-- Enhanced keymap groups for Which-Key
+keymap.set("n", "<leader>d", "", { desc = "Dotnet/Debug" })
+keymap.set("n", "<leader>dn", "", { desc = "Dotnet New" })
+keymap.set("n", "<leader>dc", "", { desc = "Dotnet Code" })
+keymap.set("n", "<leader>g", "", { desc = "Go" })
+keymap.set("n", "<leader>gs", "", { desc = "Go Generate" })
