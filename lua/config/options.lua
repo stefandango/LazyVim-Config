@@ -31,6 +31,9 @@ vim.opt.scrolloff = 8
 vim.opt.signcolumn = "yes"
 vim.opt.isfname:append("@-@")
 
+-- Use system clipboard for all operations
+vim.opt.clipboard = "unnamedplus"
+
 vim.opt.colorcolumn = "120"
 vim.opt.cmdheight = 0
 
