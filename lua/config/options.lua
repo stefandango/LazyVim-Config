@@ -37,6 +37,10 @@ vim.opt.clipboard = "unnamedplus"
 vim.opt.colorcolumn = "120"
 vim.opt.cmdheight = 0
 
+-- Swap file handling to prevent E325 errors with file explorers
+vim.opt.shortmess:append("A") -- Don't give the "ATTENTION" message when an existing swap file is found
+vim.opt.autoread = true -- Automatically read file when changed outside of Vim
+
 -- prune legacy dein.vim paths that can confuse tooling like Supermaven
 local legacy_dein = vim.fn.expand("~/.cache/nvim/dein.vim")
 if vim.fn.isdirectory(legacy_dein) == 0 then
