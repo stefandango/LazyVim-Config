@@ -4,6 +4,7 @@ return {
     "rest-nvim/rest.nvim",
     ft = "http",
     dependencies = { "nvim-lua/plenary.nvim" },
+    build = false, -- Disable automatic build/luarocks
     keys = {
       { "<leader>rr", "<cmd>Rest run<cr>", desc = "Run request under cursor", ft = "http" },
       { "<leader>rl", "<cmd>Rest run last<cr>", desc = "Run last request", ft = "http" },
