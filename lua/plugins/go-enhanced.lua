@@ -1,4 +1,18 @@
 return {
+  -- Auto-format Go files on save with gofumpt
+  {
+    "stevearc/conform.nvim",
+    optional = true,
+    opts = {
+      formatters_by_ft = {
+        go = { "gofumpt", "goimports" },
+      },
+      format_on_save = {
+        timeout_ms = 500,
+        lsp_fallback = true,
+      },
+    },
+  },
   {
     "ray-x/go.nvim",
     dependencies = {
@@ -12,6 +26,7 @@ return {
         fillstruct = "gopls",
         dap_debug = true,
         dap_debug_gui = true,
+        dap_debug_delve = vim.fn.expand("~/go/bin/dlv"),
         test_runner = "go",
         run_in_floaterm = true,
         luasnip = false, -- Disable to avoid ts_utils deprecation errors
