@@ -9,7 +9,7 @@ return {
             { "<leader>s", group = "solution/search" },
             { "<leader>t", group = "test/terminal" },
             { "<leader>f", group = "find/file" },
-            { "<leader>g", group = "git" },
+            { "<leader>g", group = "git/go" },
             { "<leader>u", group = "ui" },
             { "<leader>w", group = "windows" },
             { "<leader>x", group = "diagnostics/quickfix" },
