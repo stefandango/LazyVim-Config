@@ -2,8 +2,14 @@ return {
   "GustavEikaas/easy-dotnet.nvim",
   config = function()
     local dotnet = require("easy-dotnet")
+    local netcoredbg_on_path = vim.fn.exepath("netcoredbg")
     dotnet.setup(
       {
+        debugger = {
+          bin_path = netcoredbg_on_path ~= "" and netcoredbg_on_path or nil,
+          auto_register_dap = true,
+          console = "integratedTerminal",
+        },
         ---@param action "test" | "restore" | "build" | "run" | "watch"
         terminal = function(path, action, args)
           local commands = {
@@ -30,8 +36,8 @@ return {
           vim.cmd("startinsert")
 
           local current_buf = vim.api.nvim_get_current_buf()
-          vim.api.nvim_buf_set_keymap(current_buf, "n", "<C-q>", ":close<CR>", { noremap = true, silent = true })
-          vim.api.nvim_buf_set_keymap(current_buf, "t", "<C-c>", "<C-c>", { noremap = true, silent = true })
+          vim.keymap.set("n", "<C-q>", ":close<CR>", { buffer = current_buf, noremap = true, silent = true })
+          vim.keymap.set("t", "<C-c>", "<C-c>", { buffer = current_buf, noremap = true, silent = true })
         end,
       },
 
