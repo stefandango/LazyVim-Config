@@ -13,6 +13,31 @@ return {
       },
     },
   },
+  -- Configure gopls via LazyVim's lspconfig (instead of go.nvim)
+  {
+    "neovim/nvim-lspconfig",
+    opts = {
+      servers = {
+        gopls = {
+          settings = {
+            gopls = {
+              experimentalPostfixCompletions = true,
+              analyses = {
+                unusedparams = true,
+                shadow = true,
+              },
+              staticcheck = true,
+              gofumpt = true,
+              usePlaceholders = true,
+              completeUnimported = true,
+              matcher = "fuzzy",
+              deepCompletion = true,
+            },
+          },
+        },
+      },
+    },
+  },
   {
     "ray-x/go.nvim",
     dependencies = {
@@ -30,32 +55,8 @@ return {
         test_runner = "go",
         run_in_floaterm = true,
         luasnip = false, -- Disable to avoid ts_utils deprecation errors
-        lsp_cfg = {
-          capabilities = {
-            textDocument = {
-              completion = {
-                completionItem = {
-                  snippetSupport = true,
-                },
-              },
-            },
-          },
-          settings = {
-            gopls = {
-              experimentalPostfixCompletions = true,
-              analyses = {
-                unusedparams = true,
-                shadow = true,
-              },
-              staticcheck = true,
-              gofumpt = true,
-              usePlaceholders = true,
-              completeUnimported = true,
-              matcher = "fuzzy",
-              deepCompletion = true,
-            },
-          },
-        },
+        lsp_cfg = false, -- Let LazyVim Go extra handle gopls setup
+        lsp_keymaps = false, -- Don't override keymaps, let LazyVim handle them
       })
     end,
     event = { "CmdlineEnter" },
