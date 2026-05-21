@@ -3,49 +3,17 @@ return {
   config = function()
     local dotnet = require("easy-dotnet")
     local netcoredbg_on_path = vim.fn.exepath("netcoredbg")
-    dotnet.setup(
-      {
-        debugger = {
-          bin_path = netcoredbg_on_path ~= "" and netcoredbg_on_path or nil,
-          auto_register_dap = true,
-          console = "integratedTerminal",
-        },
-        ---@param action "test" | "restore" | "build" | "run" | "watch"
-        terminal = function(path, action, args)
-          local commands = {
-            run = function()
-              return string.format("dotnet run --project %s %s", path, args)
-            end,
-            test = function()
-              return string.format("dotnet test %s %s", path, args)
-            end,
-            restore = function()
-              return string.format("dotnet restore %s %s", path, args)
-            end,
-            build = function()
-              return string.format("dotnet build %s %s", path, args)
-            end,
-            watch = function()
-              return string.format("dotnet watch --project %s %s", path, args)
-            end,
-          }
-
-          local command = commands[action]() .. "\r"
-          vim.cmd("split")
-          vim.cmd("term " .. command)
-          vim.cmd("startinsert")
-
-          local current_buf = vim.api.nvim_get_current_buf()
-          vim.keymap.set("n", "<C-q>", ":close<CR>", { buffer = current_buf, noremap = true, silent = true })
-          vim.keymap.set("t", "<C-c>", "<C-c>", { buffer = current_buf, noremap = true, silent = true })
-        end,
+    dotnet.setup({
+      debugger = {
+        bin_path = netcoredbg_on_path ~= "" and netcoredbg_on_path or nil,
+        auto_register_dap = true,
+        console = "integratedTerminal",
       },
+    })
 
-      -- Example keybinding
-      vim.keymap.set("n", "<C-p>", function()
-        dotnet.run()
-      end)
-    )
+    vim.keymap.set("n", "<C-p>", function()
+      dotnet.run()
+    end)
     vim.api.nvim_create_autocmd({ "BufReadPost", "BufWritePost" }, {
       pattern = { "Directory.Packages.props", "*.csproj" },
       callback = function()
