@@ -51,7 +51,6 @@ return {
         fillstruct = "gopls",
         dap_debug = true,
         dap_debug_gui = true,
-        dap_debug_delve = vim.fn.expand("~/go/bin/dlv"),
         test_runner = "go",
         run_in_floaterm = true,
         luasnip = false, -- Disable to avoid ts_utils deprecation errors

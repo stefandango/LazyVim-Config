@@ -4,121 +4,94 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Overview
 
-This is a LazyVim-based Neovim configuration with custom plugins and configurations primarily focused on development with Go, C#/.NET, and general programming tasks. The configuration follows LazyVim's modular plugin architecture with custom keymaps and options.
+A LazyVim-based Neovim configuration (Neovim 0.12+) focused on Go and C#/.NET development. It follows
+LazyVim's layout: LazyVim defaults plus extras, with overrides and additions in `lua/plugins/`.
 
-## Code Formatting & Linting
+## Code Formatting
 
-- **Lua formatting**: Use `stylua` for Lua code formatting
-  - Configuration: `stylua.toml` (2 spaces, 120 column width)
-  - Command: `stylua .` to format all Lua files
+- Lua is formatted with `stylua` (`stylua.toml`: 2 spaces, 120 columns). Run `stylua .`.
+- A few files (`legendary.lua`, `which-key.lua`, `keymaps.lua`) still use 4-space indentation; stylua will
+  normalise them.
 
-## Key Architecture & Patterns
+## Structure
 
-### Plugin Management
-- Uses **Lazy.nvim** as the plugin manager
-- Configuration follows LazyVim's structure:
-  - `lua/config/` - Core configuration files (keymaps, options, lazy setup)
-  - `lua/plugins/` - Individual plugin configurations
-- Plugin configurations return tables with plugin specs
-- Lazy loading is generally disabled (`lazy = false`) for custom plugins
+- `init.lua` -- entry point, loads `config.lazy`
+- `lua/config/lazy.lua` -- bootstraps lazy.nvim, imports `lazyvim.plugins` then `plugins`
+- `lua/config/options.lua`, `keymaps.lua`, `autocmds.lua` -- overrides on top of LazyVim's defaults
+- `lua/plugins/*.lua` -- one file per plugin or concern, each returning a spec table
+- `lazyvim.json` -- enabled LazyVim extras (manage with `:LazyExtras`, not by importing them in `lazy.lua`)
+- `lazy-lock.json` -- plugin lockfile, written by lazy.nvim
 
-### Configuration Structure
-- `init.lua` - Entry point that bootstraps lazy.nvim and loads config
-- `lazyvim.json` - LazyVim extras configuration (language support, features)
-- `lazy-lock.json` - Plugin version lockfile (auto-generated)
+`defaults.lazy = false`: custom plugins load at startup unless the spec sets `ft`, `cmd`, `keys` or `event`.
+External tools (LSP servers, formatters, debuggers) come from Mason and are found via `PATH`; do not hardcode
+binary paths in specs.
 
-### LazyVim Extras Enabled
-- `lazyvim.plugins.extras.coding.yanky` - Enhanced yank/paste functionality
-- `lazyvim.plugins.extras.lang.go` - Go language support
-- `lazyvim.plugins.extras.lang.json` - JSON language support
-- `lazyvim.plugins.extras.lang.markdown` - Markdown support
-- `lazyvim.plugins.extras.lang.omnisharp` - C# language support
-- `lazyvim.plugins.extras.test.core` - Testing framework support
-- `lazyvim.plugins.extras.util.dot` - Dotfile utilities
+## LazyVim Extras (`lazyvim.json`)
 
-### Custom Options (`lua/config/options.lua`)
-- Tab width: 4 spaces (overrides LazyVim's default of 2)
-- No line wrapping
-- Search highlighting disabled (`hlsearch = false`)
-- Color column at 120 characters
-- Command height set to 0 (`cmdheight = 0`)
-- Scroll offset of 8 lines
+- `coding.yanky`
+- `dap.core`
+- `lang.go`, `lang.json`, `lang.markdown`
+- `ai.supermaven`
+- `test.core`
+- `util.dot`
 
-### Custom Keymaps (`lua/config/keymaps.lua`)
-Key custom mappings include:
-- `+`/`-` for increment/decrement (instead of Ctrl+a/Ctrl+x)
-- `<A-a>` for select all
-- `J`/`K` in visual mode to move selected lines
-- Enhanced cursor positioning for navigation commands
-- `<leader>x` to make current file executable
-- `<leader>p` in visual mode for better paste behavior
+## Options (`lua/config/options.lua`)
 
-### Development-Specific Plugins
+- 4-space indentation (LazyVim default is 2), `smartindent`
+- No wrap, `hlsearch` off, `scrolloff = 8`, colour column at 120, `cmdheight = 0`
+- System clipboard (`unnamedplus`), persistent undo
 
-#### C#/.NET Development
-- **easy-dotnet.nvim**: Local plugin for .NET project management
-  - Located at `~/Dev/nvimplugins/easy-dotnet.nvim`
-  - Provides commands for build, test, run, restore, watch
-  - Custom terminal integration for dotnet commands
-  - Keybinding: `<C-p>` to run projects
-  - Auto-detects outdated packages on `.csproj` changes
+## Keymaps (`lua/config/keymaps.lua`)
 
-- **roslyn.nvim**: Advanced C# language server
-  - Configured with detailed inlay hints
-  - Razor/Blazor file type support
-  - Integration with rzls.nvim for enhanced features
-  - Enhanced keymaps: `<leader>cr` (rename), `<leader>ca` (code actions), `<leader>cf` (format)
+- `+` / `-` increment / decrement
+- `<A-a>` select all
+- Visual `J` / `K` move selected lines
+- `J`, `<C-d>`, `<C-u>`, `n`, `N` keep the cursor in place or centred
+- Visual `<leader>p` paste without overwriting the register
+- `<leader>x` make current file executable
+- `<leader>yp` yank the absolute file path
+- `Q` disabled
 
-- **Enhanced Debugging**: Full DAP setup with netcoredbg
-  - Debug keymaps: `<leader>db` (breakpoint), `<leader>dc` (continue), `<leader>ds` (step over)
-  - Auto-opening debug UI with scopes, breakpoints, and console
-  - Support for both launch and attach debugging
+## Plugins (`lua/plugins/`)
 
-- **Testing Integration**: Advanced neotest configuration
-  - Test keymaps: `<leader>tt` (run test), `<leader>tf` (run file), `<leader>td` (debug test)
-  - Test discovery based on project naming conventions
-  - Watch mode and output panel support
+### C#/.NET
 
-- **Solution Explorer**: Enhanced neo-tree for C# projects
-  - Filters out bin/, obj/, .vs/ directories automatically
-  - Keymaps: `<leader>se` (open), `<leader>st` (toggle), `<leader>sf` (focus)
+- `easy-dotnet.lua` -- easy-dotnet.nvim: build/test/run, `<C-p>` runs the project, checks outdated packages
+  when a `.csproj` or `Directory.Packages.props` is opened or saved, and rewrites a file-scoped namespace on
+  open to match the folder structure. Debugging via netcoredbg (auto-registered with nvim-dap).
+- `roslyn.lua` -- roslyn.nvim as the C# language server. Server settings (inlay hints, code lens) go through
+  `vim.lsp.config("roslyn", ...)`. Razor/CSHTML is handled by roslyn's cohosting; rzls.nvim is not used.
+  Requires roslyn language server 5.12 or newer.
+- `csharpier.lua` -- CSharpier as the conform.nvim formatter for `cs`, using conform's built-in definition.
+- `neotest-csharp.lua` -- neotest-dotnet adapter, `<leader>t*` test keymaps, test projects detected by
+  name (`Test`, `Tests`, `IntegrationTest`, `UnitTest`).
+- `solution-explorer.lua` -- neo-tree hiding `bin/`, `obj/`, `.vs/`; `A` creates a new item via easy-dotnet;
+  `<leader>se` / `<leader>st` / `<leader>sf`.
+- `csharp-snippets.lua` -- LuaSnip C# snippets (class, interface, method, property, constructor, test
+  method, API controller).
 
-- **Custom C# Snippets**: LuaSnip integration with C# templates
-  - class, interface, method, property, constructor snippets
-  - Test method templates with Arrange/Act/Assert structure
-  - API controller templates
+### Go
 
-- **Project Management Keymaps**:
-  - `<leader>ds` - Add project to solution
-  - `<leader>dp` - Create new dotnet project
-  - `<leader>dr` - Dotnet restore
-  - `<leader>db` - Dotnet build
-  - `<leader>dt` - Dotnet test
+- `lang.go` extra provides gopls, delve, neotest-golang and nvim-dap-go.
+- `go-enhanced.lua` -- gopls settings, gofumpt + goimports on save, go.nvim commands under `<leader>g*`,
+  gopher.nvim tag/test generation under `<leader>gs*`.
 
-#### Go Development
-- Enabled via LazyVim extras (`lazyvim.plugins.extras.lang.go`)
-- Includes neotest-golang for testing integration
-- DAP (Debug Adapter Protocol) support with nvim-dap-go
+### General
 
-#### Quality of Life
-- **hardtime.nvim**: Helps break bad Vim habits by discouraging repetitive key usage
-- **rose-pine**: Color scheme configuration
-- Custom lualine configuration for status line
+- `claude-code.lua` -- claudecode.nvim; `<leader>cc` toggle, `<leader>cf` focus.
+- `snacks.lua` -- dashboard header, picker shows hidden files, `<leader>e` opens the explorer at the current
+  file's directory (`A` creates a .NET item there).
+- `flash.lua` -- flash.nvim configuration.
+- `dev-tools.lua` -- rest.nvim (`.http`), vim-dadbod-ui (`<leader>Du`), nvim-jqx, diffview.nvim.
+- `markdown.lua` -- marksman and markdownlint disabled, prettier for markdown, spell off.
+- `legendary.lua` -- command palette (`<leader>fk`, `<C-S-p>`).
+- `which-key.lua` -- group labels.
+- `lualine.lua` -- clears `lualine_z`.
+- `kanagawa.lua` -- colour scheme.
 
-### Plugin Development Patterns
-When adding new plugins:
-1. Create new `.lua` file in `lua/plugins/`
-2. Return a table with plugin specs
-3. Use `dir` parameter for local plugin development
-4. Configure using `opts` table or `config` function
-5. Add appropriate `ft` (filetype) restrictions for language-specific plugins
+## Adding Plugins
 
-### Local Plugin Development
-- Custom plugins are stored in `~/Dev/nvimplugins/`
-- Use `dir` parameter in plugin spec to reference local paths
-- Example pattern shown in `stefandangoPlugin.lua` (currently disabled)
-
-## File Structure Notes
-- `example.lua` contains comprehensive examples of plugin configuration patterns but is disabled
-- Most plugin files follow a simple return table structure
-- Configuration files use clear separation between LazyVim defaults and custom overrides
+1. Create a `.lua` file in `lua/plugins/` returning a spec table.
+2. Prefer `opts` over `config`; use `optional = true` when extending a plugin that an extra may not enable.
+3. Set `ft`, `cmd` or `keys` for language-specific plugins so they do not load at startup.
+4. Local plugins live in `~/Dev/nvimplugins/` and are referenced with `dir = ...`.
